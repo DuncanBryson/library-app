@@ -15,18 +15,27 @@ function Book (title, author, pages, read)  {
   this.isRead = () => this.read ? this.read = false:this.read = true
 }
 
+// listen for all buttons, send to appropriate function
+document.addEventListener ('click', (event) =>{
+  let target = event.target;
+  event.preventDefault();
+  if(target.className === "submit"){
+    storeInputs();
+    clearFields();
+  }else if (target.className === "isRead") target.textContent === "Read" ? target.textContent = "Not Read" : target.textContent = "Read";
+  else if (target.textContent === "Remove"){
+    // delete buttons: remove parent div, remove book from library array, i--
+    myLibrary.splice(target.value, target.value + 1);
+    const div = document.querySelector("." + target.className);
+    div.remove();
+    arrayIndex--;
+  }
+});
+
 // DELETE LATER, just to test inputs working
 function testInputs() {
   console.log('Title: ' + newTitle.value + ' Author: '+  newAuthor.value + ' Pages: ' + newPages.value + ' Read: ' + (newRead.checked ? "Yes":"no") );
 }
-
-// activates submit button
-submit.addEventListener('click',()  => {
-  event.preventDefault();
-  // testInputs();
-  storeInputs();
-  clearFields();
-});
 
 // Takes form data, stores in array
 function storeInputs() {
@@ -47,9 +56,12 @@ function libraryAdd() {
   pages.textContent = "Pages: " + myLibrary[arrayIndex].pages;
   const read = document.createElement('button');
   read.textContent = myLibrary[arrayIndex].read ? "Read": "Not Read";
+  read.className = "isRead";
   const remove = document.createElement('button');
   remove.textContent = "Remove";
   remove.className = "book" + arrayIndex;
+
+  remove.value = arrayIndex;
   // append elements
   display.appendChild(div);
   div.appendChild(title);
