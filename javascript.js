@@ -25,15 +25,25 @@ document.addEventListener ('click', (event) =>{
   }else if (target.className === "isRead") {
     target.textContent === "Read" ? target.textContent = "Not Read" : target.textContent = "Read";
     myLibrary[target.value].isRead();
-  }else if (target.textContent === "Remove"){
-    // delete buttons: remove parent div, remove book from library array, i--
-    myLibrary.splice(target.value, 1);
-    const div = document.querySelector("." + target.className);
-    div.remove();
-    arrayIndex--;
-  }
+  }else if (target.className === "remove") removeBook(target);
 });
 
+function removeBook(target) {
+  // Remove book from DOM
+  const div = document.querySelector(".book" + target.value);
+  div.remove();
+  // remove book from array, iterate over all values greater than book
+  let items = document.querySelectorAll(".remove, .isRead");
+  for (item of items){
+    if (item.value > target.value){ 
+      item.value--;
+      item.parentNode.className = "book" + item.value;
+    }
+  }
+  myLibrary.splice(target.value, 1);
+  // reduce index for next input
+  arrayIndex--;
+}
 
 // Takes form data, stores in array
 function storeInputs() {
@@ -58,8 +68,7 @@ function libraryAdd() {
   read.value = arrayIndex;
   const remove = document.createElement('button');
   remove.textContent = "Remove";
-  remove.className = "book" + arrayIndex;
-
+  remove.className = "remove";
   remove.value = arrayIndex;
   // append elements
   display.appendChild(div);
