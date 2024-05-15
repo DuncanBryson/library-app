@@ -1,18 +1,14 @@
 const myLibrary = [];
-const newTitle = document.querySelector("#title");
-const newAuthor = document.querySelector("#author");
-const newPages = document.querySelector("#pages");
-const newRead = document.querySelector("#read");
-const submit = document.querySelector('#submit');
-const display = document.querySelector('.library');
 let arrayIndex = 0;
 
-function Book (title, author, pages, read)  {
-  this.title = title;
-  this.author = author;
-  this.pages = pages;
-  this.read = read;
-  this.isRead = () => this.read ? this.read = false:this.read = true
+class Book  {
+  constructor(title, author, pages, read){
+    this.title = title;
+    this.author = author;
+    this.pages = pages;
+    this.read = read;
+    this.isRead = () => this.read ? this.read = false:this.read = true
+    }
 }
 
 // listen for all buttons, send to appropriate function
@@ -21,7 +17,6 @@ document.addEventListener ('click', (event) =>{
   if(target.className === "submit"){
     event.preventDefault();
     storeInputs();
-    clearFields();
   }else if (target.className === "isRead") {
     target.textContent === "Read" ? target.textContent = "Not Read" : target.textContent = "Read";
     myLibrary[target.value].isRead();
@@ -47,8 +42,15 @@ function removeBook(target) {
 
 // Takes form data, stores in array
 function storeInputs() {
-  myLibrary.push(new Book(newTitle.value, newAuthor.value, newPages.value, newRead.checked)); 
+  const title = document.querySelector("#title");
+  const author = document.querySelector("#author");
+  const pages = document.querySelector("#pages");
+  const read = document.querySelector("#read");
+  myLibrary.push(new Book(title.value, author.value, pages.value, read.checked)); 
+  // add to DOM
   libraryAdd();
+  // Empty inputs
+  clearFields(title,author,pages,read);
 }
 
 // Add latest book to DOM from array
@@ -71,7 +73,7 @@ function libraryAdd() {
   remove.className = "remove";
   remove.value = arrayIndex;
   // append elements
-  display.appendChild(div);
+  document.querySelector('.library').appendChild(div);
   div.appendChild(title);
   div.appendChild(author);
   div.appendChild(pages);
@@ -82,9 +84,9 @@ function libraryAdd() {
 }
 
 // clears input fields
-function clearFields() {
-  newTitle.value = '';
-  newAuthor.value = '';
-  newPages.value = '';
-  newRead.checked = false;
+function clearFields(title,author,pages,read) {
+  title.value = '';
+  author.value = '';
+  pages.value = '';
+  read.checked = false;
 }
